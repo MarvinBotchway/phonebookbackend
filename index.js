@@ -1,17 +1,12 @@
 const express = require('express');
+const morgan = require('morgan');
 const app = express();
 
 app.use(express.json());
-
-const requestLogger = (req, res, next) => {
-  console.log('Method:', req.method);
-  console.log('Path:', req.path);
-  console.log('Body:', req.body);
-  console.log('---');
-  next();
-};
-
-app.use(requestLogger);
+morgan.token('body', (req, res) => JSON.stringify(req.body));
+app.use(
+  morgan(':method :url :status :res[content-length] - :response-time ms :body')
+);
 
 let persons = [
   {
